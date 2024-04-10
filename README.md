@@ -2,7 +2,7 @@
 
 | **Autor**                   | **Profesor**                              | **Asignatura**                            | **Universidad**                | **Ubicación**                    | **Fecha**        |
 | --------------------------- | ----------------------------------------- | ----------------------------------------- | ------------------------------ | -------------------------------- | ---------------- |
-| **_TOMÁS JAVES TOMMASONE_** | **_Dr. EDUARDO MANUEL SEGREDO GONZALEZ_** | **_DESARROLLO DE SISTEMAS INFORMÁTICOS_** | **_UNIVERSIDAD DE LA LAGUNA_** | **_SAN CRISTOBAL DE LA LAGUNA_** | **_19/03/2024_** |
+| **_TOMÁS JAVES TOMMASONE_** | **_Dr. EDUARDO MANUEL SEGREDO GONZALEZ_** | **_DESARROLLO DE SISTEMAS INFORMÁTICOS_** | **_UNIVERSIDAD DE LA LAGUNA_** | **_SAN CRISTOBAL DE LA LAGUNA_** | **_10/04/2024_** |
 
 ## Status Badges
 <p align='center'>
