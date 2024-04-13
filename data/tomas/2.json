@@ -1,12 +1,11 @@
 {
   "id": 2,
-  "nombre": "Black Lotus",
+  "nombre": "Serra Angel",
   "costeMana": 10000,
-  "color": "Azul",
-  "líneaTipo": "Tierra",
-  "rareza": "Mítica",
+  "color": "Multicolor",
+  "líneaTipo": "Criatura",
+  "rareza": "Infrecuente",
   "textoReglas": "Prueba",
-  "fuerzaResistencia": [],
   "marcasLealtad": 5,
   "valorMercado": 100000
 }

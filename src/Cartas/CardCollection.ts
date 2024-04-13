@@ -151,6 +151,7 @@ export class CardCollection {
     cards += chalk.bold(`\nColección de cartas de ${this.user}\n`);
     this.collection.forEach(card => {
       const colorCode = this.getColorCode(card.color);
+      cards += chalk.white('--------------------------------\n');
       cards += chalk.bold(chalk.white(`ID: ${card.id}`)) + '\n';
       cards += `Nombre: ${card.nombre}` + '\n';
       cards += `Coste de Mana: ${card.costeMana}\n`;
@@ -164,7 +165,8 @@ export class CardCollection {
       if (card.marcasLealtad && card.líneaTipo === 'Planeswalker') {
         cards += `Marcas de Lealtad: ${card.marcasLealtad}\n`;
       }
-      cards += `Valor de Mercado: ${card.valorMercado}\n\n`;
+      cards += `Valor de Mercado: ${card.valorMercado}\n`;
+      cards += '--------------------------------\n';
     });
 
     return cards;
