@@ -1,5 +1,6 @@
 import net from 'net';
 import yargs from 'yargs';
+import { EventEmitter } from 'events';
 import { hideBin } from 'yargs/helpers';
 
 const argv = yargs(hideBin(process.argv))
@@ -129,6 +130,8 @@ const argv = yargs(hideBin(process.argv))
   .help()
   .argv;
 
+const responseEmitter = new EventEmitter();
+
 /**
  * @brief Función que envía los datos al servidor.
  * @param data Datos a enviar.
@@ -139,7 +142,7 @@ function sendDataToServer(data: any, user: string) {
   const client = new net.Socket();
 
   // Nos conectamos al servidor
-  client.connect(3000, 'localhost', () => {
+  client.connect(2424, 'localhost', () => {
     console.log('Conectado al servidor.');
     // Enviamos los datos al servidor
     client.write(JSON.stringify(data) + '\n');
@@ -148,6 +151,7 @@ function sendDataToServer(data: any, user: string) {
   // Escuchamos la respuesta del servidor
   client.on('data', (data) => {
     console.log(data.toString());
+    responseEmitter.emit('response', data.toString());
   });
 
   // Cerramos la conexión

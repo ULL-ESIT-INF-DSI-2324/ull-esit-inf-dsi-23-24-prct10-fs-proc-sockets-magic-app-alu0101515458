@@ -38,7 +38,7 @@ export class CardCollection {
    * @param {string} colorName - Nombre del color.
    * @returns {string} - Código hexadecimal del color.
    */
-  private getColorCode(colorName: string): string {
+  public getColorCode(colorName: string): string {
     const colorMap: { [key: string]: string } = {
       blanco: '#FFFFFF',
       azul: '#0000FF',

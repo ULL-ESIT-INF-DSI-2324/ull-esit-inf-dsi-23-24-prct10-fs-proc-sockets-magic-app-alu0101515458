@@ -1,79 +1,109 @@
 import net from 'net';
 import fs from 'fs';
 import path from 'path';
+import { EventEmitter } from 'events';
 import { Card } from '../Cartas/ICard.js'
 import { CardRequest } from '../Cartas/ICardRequest.js'
 import { CardCollection } from '../Cartas/CardCollection.js';
 
+const cardEventEmitter = new EventEmitter();
+let cardCollections: { [key: string]: CardCollection } = {};
+
+/**
+ * @brief Evento para añadir una carta a la colección de un usuario.
+ */
+cardEventEmitter.on('add', (connection, request) => {
+  const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
+  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  const answer = cardCollection.addCard(request.carta);
+  connection.write(answer, () => connection.end());
+});
+
+/**
+ * @brief Evento para eliminar una carta de la colección de un usuario.
+ */
+cardEventEmitter.on('remove', (connection, request) => {
+  const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
+  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  const answer = cardCollection.removeCard(request.carta.id);
+  connection.write(answer, () => connection.end());
+});
+
+/**
+ * @brief Evento para actualizar una carta de la colección de un usuario.
+ */
+cardEventEmitter.on('update', (connection, request) => {
+  const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
+  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  const answer = cardCollection.updateCard(request.carta);
+  connection.write(answer, () => connection.end());
+});
+
+/**
+ * @brief Evento para leer una carta de la colección de un usuario.
+ */
+cardEventEmitter.on('read', (connection, request) => {
+  const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
+  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  const answer = cardCollection.readCard(request.carta.id);
+  connection.write(answer, () => connection.end());
+});
+
+/**
+ * @brief Evento para listar las cartas de la colección de un usuario.
+ */
+cardEventEmitter.on('list', (connection, request) => {
+  const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
+  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  const answer = cardCollection.listCards();
+  connection.write(answer, () => connection.end());
+});
+
+/**
+ * @brief Evento por defecto.
+ */
+cardEventEmitter.on('default', (connection) => {
+  connection.write('Comando no reconocido.\n');
+  connection.end();
+});
+
 /**
  * @brief Servidor que permite añadir cartas a la colección de un usuario.
  */
-const server = net.createServer(connection => {
+export const server = net.createServer(connection => {
   let requestData = ''; // Variable para almacenar los datos recibidos
 
   connection.on('data', data => {
     requestData += data.toString(); // Concatenamos los datos recibidos
 
     // Verificamos si se ha recibido el delimitador
-    if (requestData.endsWith('\n')) {
-      try {
-        const request = JSON.parse(requestData.trim()) as CardRequest; // Eliminamos espacios en blanco y convertimos a objeto JSON
-        console.log('Cliente conectado:', request.usuario);
-        // Verificamos si ya hay una instancia de CardCollection para este usuario
-        let cardCollections: { [key: string]: CardCollection } = {};
+    try {
+      const request = JSON.parse(requestData.trim()) as CardRequest; // Eliminamos espacios en blanco y convertimos a objeto JSON
+      console.log('Cliente operando:', request.usuario);
+      // Verificamos si ya hay una instancia de CardCollection para este usuario
+      let cardCollections: { [key: string]: CardCollection } = {};
 
-        // Si no existe la propiedad cardCollections en el objeto global, la creamos
-        if (!cardCollections.hasOwnProperty(request.usuario)) {
-          // Si no hay una instancia, la creamos y la almacenamos en el objeto cardCollections
-          cardCollections[request.usuario] = new CardCollection(request.usuario);
-        }
-        
-        let cardCollection = cardCollections[request.usuario];
-        let answer = '';
-        switch (request.comando) {
-          case 'add':
-            answer = cardCollection.addCard(request.carta);
-            break;
-          case 'remove':
-            answer = cardCollection.removeCard(request.carta.id);
-            break;
-          case 'list':
-            answer = cardCollection.listCards();
-            break;
-          case 'update':
-            answer = cardCollection.updateCard(request.carta);
-            break;
-          case 'read':
-            answer = cardCollection.readCard(request.carta.id);
-            break;
-          default:
-            // Si el comando no es reconocido
-            connection.write('Comando no reconocido: ' + request.comando + '\n');
-            break;
-        }
-        connection.write(answer, () => {
-          connection.end(); // Cerramos la conexión después de enviar respuesta
-        });  
-      } catch (error) {
-        connection.write('Error al procesar la petición: formato inválido.\n');
+      // Si no existe la propiedad cardCollections en el objeto global, la creamos
+      if (!cardCollections.hasOwnProperty(request.usuario)) {
+        // Si no hay una instancia, la creamos y la almacenamos en el objeto cardCollections
+        cardCollections[request.usuario] = new CardCollection(request.usuario);
       }
-      requestData = ''; // Reiniciamos la variable para la próxima petición
+      
+      // Emitimos un evento basado en el comando recibido o 'default' si el comando no se reconoce
+      if (cardEventEmitter.listenerCount(request.comando) > 0) {
+        cardEventEmitter.emit(request.comando, connection, request);
+      } else {
+        cardEventEmitter.emit('default', connection, request);
+      }
+ 
+    } catch (error) {
+      connection.write('Error al procesar la petición: formato inválido.\n');
     }
-  });
-
-  // Agregamos un manejador para el evento 'request'
-  connection.on('request', request => {
-    console.log('Petición completa recibida:', request);
-  });
-
-  // Agregamos un manejador para el evento 'end'
-  connection.on('end', () => {
-    console.log('Cliente desconectado.');
-    connection.end(); // Finalizamos la conexión
+    requestData = ''; // Reiniciamos la variable para la próxima petición
   });
 });
 
-// Escuchamos en el puerto 3000
-server.listen(3000, () => {
+// Escuchamos en el puerto 2424
+server.listen(2424, () => {
   console.log('Servidor esperando conexiones...');
 });
