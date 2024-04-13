@@ -152,7 +152,7 @@ export class CardCollection {
     this.collection.forEach(card => {
       const colorCode = this.getColorCode(card.color);
       cards += chalk.bold(chalk.white(`ID: ${card.id}`)) + '\n';
-      cards += chalk.white(`Nombre: ${card.nombre}`) + '\n';
+      cards += `Nombre: ${card.nombre}` + '\n';
       cards += `Coste de Mana: ${card.costeMana}\n`;
       cards += `Color: ${chalk.hex(colorCode)(card.color)}\n`;
       cards += `Tipo de Línea: ${card.líneaTipo}\n`;
@@ -186,7 +186,7 @@ export class CardCollection {
     } else {
       const colorCode = this.getColorCode(card.color);
       cardInfo += chalk.bold(`\nInformación de la carta con ID ${id}\n`);
-      cardInfo += chalk.white(`Nombre: ${card.nombre}`) + '\n';
+      cardInfo += `Nombre: ${card.nombre}` + '\n';
       cardInfo += `Coste de Mana: ${card.costeMana}\n`;
       cardInfo += `Color: ${chalk.hex(colorCode)(card.color)}\n`;
       cardInfo += `Tipo de Línea: ${card.líneaTipo}\n`;

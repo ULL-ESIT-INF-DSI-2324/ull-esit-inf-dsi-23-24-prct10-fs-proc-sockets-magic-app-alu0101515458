@@ -9,8 +9,6 @@ import { CardCollection } from '../Cartas/CardCollection.js';
  * @brief Servidor que permite añadir cartas a la colección de un usuario.
  */
 const server = net.createServer(connection => {
-  console.log('Cliente conectado.');
-
   let requestData = ''; // Variable para almacenar los datos recibidos
 
   connection.on('data', data => {
@@ -20,6 +18,7 @@ const server = net.createServer(connection => {
     if (requestData.endsWith('\n')) {
       try {
         const request = JSON.parse(requestData.trim()) as CardRequest; // Eliminamos espacios en blanco y convertimos a objeto JSON
+        console.log('Cliente conectado:', request.usuario);
         // Verificamos si ya hay una instancia de CardCollection para este usuario
         let cardCollections: { [key: string]: CardCollection } = {};
 
@@ -34,29 +33,27 @@ const server = net.createServer(connection => {
         switch (request.comando) {
           case 'add':
             answer = cardCollection.addCard(request.carta);
-            connection.write(answer);
             break;
           case 'remove':
             answer = cardCollection.removeCard(request.carta.id);
-            connection.write(answer);
             break;
           case 'list':
             answer = cardCollection.listCards();
-            connection.write(answer);
             break;
           case 'update':
             answer = cardCollection.updateCard(request.carta);
-            connection.write(answer);
             break;
           case 'read':
             answer = cardCollection.readCard(request.carta.id);
-            connection.write(answer);
             break;
           default:
             // Si el comando no es reconocido
             connection.write('Comando no reconocido: ' + request.comando + '\n');
             break;
         }
+        connection.write(answer, () => {
+          connection.end(); // Cerramos la conexión después de enviar respuesta
+        });  
       } catch (error) {
         connection.write('Error al procesar la petición: formato inválido.\n');
       }

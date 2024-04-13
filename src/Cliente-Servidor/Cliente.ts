@@ -36,7 +36,7 @@ const argv = yargs(hideBin(process.argv))
           valorMercado: argv.valorMercado
         }
       };
-      sendDataToServer(requestData);
+      sendDataToServer(requestData, argv.user);
     }
   })
   .command({
@@ -50,7 +50,7 @@ const argv = yargs(hideBin(process.argv))
         usuario: argv.user,
         comando: 'list'
       };
-      sendDataToServer(requestData);
+      sendDataToServer(requestData, argv.user);
     }
   })
   .command({
@@ -86,7 +86,7 @@ const argv = yargs(hideBin(process.argv))
           valorMercado: argv.valorMercado
         }
       };
-      sendDataToServer(requestData);
+      sendDataToServer(requestData, argv.user);
     }
   })
   .command({
@@ -104,7 +104,7 @@ const argv = yargs(hideBin(process.argv))
           id: argv.id
         }
       };
-      sendDataToServer(requestData);
+      sendDataToServer(requestData, argv.user);
     }
   })
   .command({
@@ -122,7 +122,7 @@ const argv = yargs(hideBin(process.argv))
           id: argv.id
         }
       };
-      sendDataToServer(requestData);
+      sendDataToServer(requestData, argv.user);
     }
   })
   
@@ -134,7 +134,7 @@ const argv = yargs(hideBin(process.argv))
  * @param data Datos a enviar.
  * @returns void
  */
-function sendDataToServer(data: any) {
+function sendDataToServer(data: any, user: string) {
   // Creamos un nuevo socket
   const client = new net.Socket();
 
@@ -150,8 +150,8 @@ function sendDataToServer(data: any) {
     console.log(data.toString());
   });
 
-  // Escuchamos el evento de cierre de conexión
+  // Cerramos la conexión
   client.on('close', () => {
-    console.log('Desconectado del servidor.');
+    console.log('');
   });
 }
