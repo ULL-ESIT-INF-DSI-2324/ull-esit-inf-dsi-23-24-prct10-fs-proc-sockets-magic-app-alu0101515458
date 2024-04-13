@@ -14,7 +14,7 @@ let cardCollections: { [key: string]: CardCollection } = {};
  */
 cardEventEmitter.on('add', (connection, request) => {
   const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
-  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  cardCollections[request.usuario] = cardCollection; // Guardamos la colección actualizada
   const answer = cardCollection.addCard(request.carta);
   connection.write(answer, () => connection.end());
 });
@@ -24,7 +24,7 @@ cardEventEmitter.on('add', (connection, request) => {
  */
 cardEventEmitter.on('remove', (connection, request) => {
   const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
-  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  cardCollections[request.usuario] = cardCollection; // Guardamos la colección actualizada
   const answer = cardCollection.removeCard(request.carta.id);
   connection.write(answer, () => connection.end());
 });
@@ -34,7 +34,7 @@ cardEventEmitter.on('remove', (connection, request) => {
  */
 cardEventEmitter.on('update', (connection, request) => {
   const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
-  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  cardCollections[request.usuario] = cardCollection; // Guardamos la colección actualizada
   const answer = cardCollection.updateCard(request.carta);
   connection.write(answer, () => connection.end());
 });
@@ -44,7 +44,7 @@ cardEventEmitter.on('update', (connection, request) => {
  */
 cardEventEmitter.on('read', (connection, request) => {
   const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
-  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  cardCollections[request.usuario] = cardCollection; // Guardamos la colección actualizada
   const answer = cardCollection.readCard(request.carta.id);
   connection.write(answer, () => connection.end());
 });
@@ -54,7 +54,7 @@ cardEventEmitter.on('read', (connection, request) => {
  */
 cardEventEmitter.on('list', (connection, request) => {
   const cardCollection = cardCollections[request.usuario] || new CardCollection(request.usuario);
-  cardCollections[request.usuario] = cardCollection; // Guardar la colección actualizada
+  cardCollections[request.usuario] = cardCollection; // Guardamos la colección actualizada
   const answer = cardCollection.listCards();
   connection.write(answer, () => connection.end());
 });

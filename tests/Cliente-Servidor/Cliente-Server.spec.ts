@@ -154,7 +154,5 @@ describe('Servidor de Cartas', function() {
       expect(data.toString()).to.include('Comando no reconocido');
       done();
     });
-  }
-  )
-
+  });
 });
